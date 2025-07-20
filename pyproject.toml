@@ -1,0 +1,16 @@
+[project]
+name = "jaxbaby"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jax>=0.6.2",
+    "jaxlib>=0.6.2",
+    "jaxopt>=0.8.5",
+    "matplotlib>=3.10.3",
+    "numpy>=2.3.1",
+    "optimistix>=0.0.10",
+    "pandas>=2.3.1",
+    "scipy>=1.16.0",
+]
