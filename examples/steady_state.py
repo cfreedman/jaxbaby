@@ -17,7 +17,7 @@ parameters = {
     "rho": 0.8,
     "sigma": 1.0,
     "psi": 3.0,
-    "phi": 1.6,
+    "phi": 1.4,
 }
 
 
@@ -29,7 +29,7 @@ def resource_constraint(ctx: dict[str, float]) -> jnp.ndarray:
     alpha = ctx["alpha"]
     delta = ctx["delta"]
 
-    res = k**alpha * l * (1 - alpha) - delta * k - c
+    res = (k**alpha) * (l ** (1 - alpha)) + (1 - delta) * k - c - k
     return jnp.array(res)
 
 
@@ -38,9 +38,10 @@ def euler(ctx: dict[str, float]) -> jnp.ndarray:
     l = ctx["l"]
 
     alpha = ctx["alpha"]
+    beta = ctx["beta"]
     delta = ctx["delta"]
 
-    res = alpha * k**alpha * l ** (1 - alpha) - delta
+    res = 1 - beta * (alpha * (k ** (alpha - 1)) * (l ** (1 - alpha)) + 1 - delta)
     return jnp.array(res)
 
 
@@ -54,7 +55,9 @@ def labor_optimality(ctx: dict[str, float]) -> jnp.ndarray:
     psi = ctx["psi"]
     phi = ctx["phi"]
 
-    res = (psi * phi * l**phi - 1) / (c**-eta) - (1 - alpha) * k**alpha * l**-alpha
+    res = psi * phi * (l ** (phi - 1)) * (c**eta) - (1 - alpha) * (k**alpha) * (
+        l ** (-alpha)
+    )
     return jnp.array(res)
 
 
@@ -74,4 +77,4 @@ model = Model(
     ss_equations=ss_equations,
 )
 
-print(model.ss_solver())
+print(model.ss_solver(init_guess=jnp.array([2, 13, 0.3])))
